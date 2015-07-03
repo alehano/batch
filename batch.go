@@ -4,10 +4,7 @@ You have to call Start() in the beginning and Close() in the end.
 */
 package batch
 
-import (
-	"sync"
-	"time"
-)
+import "sync"
 
 type batch struct {
 	workers int
@@ -43,7 +40,6 @@ func (b batch) Start() {
 func (b batch) Add(fn func() error) {
 	b.wg.Add(1)
 	b.jobChan <- fn
-	time.Sleep(time.Millisecond * 10)
 }
 
 func (b batch) Close() {

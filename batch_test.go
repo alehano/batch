@@ -4,12 +4,13 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"math/rand"
 	"testing"
 	"time"
 )
 
 func job(text string) {
-	time.Sleep(time.Millisecond * 100)
+	time.Sleep(time.Millisecond * time.Duration(rand.Intn(100)))
 	log.Println(text)
 }
 
@@ -21,14 +22,19 @@ func TestBatch(t *testing.T) {
 	batch.Start()
 
 	for i := 1; i <= 10; i++ {
-		batch.Add(func() error {
-			job(fmt.Sprintf("Job #: %v", i))
 
-			if i == 9 {
-				return errors.New("Intentional error")
+		fn := func(i int) func() error {
+			return func() error {
+				job(fmt.Sprintf("Job #: %v", i))
+
+				if i == 9 {
+					return errors.New("Intentional error")
+				}
+				return nil
 			}
-			return nil
-		})
+		}
+
+		batch.Add(fn(i))
 
 	}
 
