@@ -4,20 +4,19 @@ import (
 	"errors"
 	"fmt"
 	"log"
-	"math/rand"
 	"testing"
 	"time"
 )
 
 func job(text string) {
-	time.Sleep(time.Millisecond * time.Duration(rand.Intn(100)))
+	time.Sleep(time.Millisecond * 100)
 	log.Println(text)
 }
 
 func TestBatch(t *testing.T) {
 
 	batch := New(5, func(err error) {
-		log.Println("ERROR: " + err.Error())
+		log.Println(err.Error())
 	})
 	batch.Start()
 

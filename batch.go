@@ -43,7 +43,7 @@ func (sb batch) Start() {
 func (sb batch) Add(fn func() error) {
 	sb.wg.Add(1)
 	sb.jobChan <- fn
-	time.Sleep(time.Millisecond * 1)
+	time.Sleep(time.Millisecond * 10)
 }
 
 func (sb batch) Close() {
