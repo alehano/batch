@@ -1,5 +1,5 @@
 /*
-Package batch runs many funcs asynchronously with multiple workers
+Package batch runs multiple funcs asynchronously
 You have to call Start() in the beginning and Close() in the end.
 */
 package batch
