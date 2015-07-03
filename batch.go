@@ -26,31 +26,31 @@ func New(workers int, errCallback func(error)) *batch {
 	}
 }
 
-func (sb batch) Start() {
-	for i := 0; i < sb.workers; i++ {
+func (b batch) Start() {
+	for i := 0; i < b.workers; i++ {
 		go func() {
-			for job := range sb.jobChan {
+			for job := range b.jobChan {
 				err := job()
 				if err != nil {
-					sb.errFn(err)
+					b.errFn(err)
 				}
-				sb.wg.Done()
+				b.wg.Done()
 			}
 		}()
 	}
 }
 
-func (sb batch) Add(fn func() error) {
-	sb.wg.Add(1)
-	sb.jobChan <- fn
+func (b batch) Add(fn func() error) {
+	b.wg.Add(1)
+	b.jobChan <- fn
 	time.Sleep(time.Millisecond * 10)
 }
 
-func (sb batch) Close() {
-	sb.wg.Wait()
-	close(sb.jobChan)
+func (b batch) Close() {
+	b.wg.Wait()
+	close(b.jobChan)
 }
 
-func (sb batch) ForceClose() {
-	close(sb.jobChan)
+func (b batch) ForceClose() {
+	close(b.jobChan)
 }
