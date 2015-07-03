@@ -16,7 +16,7 @@ func job(text string) {
 
 func TestBatch(t *testing.T) {
 
-	batch := New(2, func(err error) {
+	batch := New(5, func(err error) {
 		log.Println("ERROR: " + err.Error())
 	})
 	batch.Start()
