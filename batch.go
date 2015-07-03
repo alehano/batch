@@ -6,7 +6,7 @@ package batch
 
 import "sync"
 
-type batch struct {
+type Batch struct {
 	workers int
 	jobChan chan func() error
 	errFn   func(error)
@@ -14,8 +14,8 @@ type batch struct {
 }
 
 // New creates new Batch instance
-func New(workers int, errCallback func(error)) *batch {
-	return &batch{
+func New(workers int, errCallback func(error)) *Batch {
+	return &Batch{
 		workers: workers,
 		jobChan: make(chan func() error),
 		errFn:   errCallback,
@@ -23,7 +23,7 @@ func New(workers int, errCallback func(error)) *batch {
 	}
 }
 
-func (b batch) Start() {
+func (b Batch) Start() {
 	for i := 0; i < b.workers; i++ {
 		go func() {
 			for job := range b.jobChan {
@@ -37,16 +37,16 @@ func (b batch) Start() {
 	}
 }
 
-func (b batch) Add(fn func() error) {
+func (b Batch) Add(fn func() error) {
 	b.wg.Add(1)
 	b.jobChan <- fn
 }
 
-func (b batch) Close() {
+func (b Batch) Close() {
 	b.wg.Wait()
 	close(b.jobChan)
 }
 
-func (b batch) ForceClose() {
+func (b Batch) ForceClose() {
 	close(b.jobChan)
 }
