@@ -46,7 +46,3 @@ func (b Batch) Close() {
 	b.wg.Wait()
 	close(b.jobChan)
 }
-
-func (b Batch) ForceClose() {
-	close(b.jobChan)
-}
