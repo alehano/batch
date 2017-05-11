@@ -15,6 +15,9 @@ type Batch struct {
 
 // New creates new Batch instance
 func New(workers int, errCallback func(error)) *Batch {
+	if workers == 0 {
+		workers = 1
+	}
 	return &Batch{
 		workers: workers,
 		jobChan: make(chan func() error),
